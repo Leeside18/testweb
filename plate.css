@@ -1,0 +1,12 @@
+#cakeregion{
+	padding: 40px;
+	width: 860px;
+	height: 700px;
+	background-repeat: no-repeat;
+	background-size: 860px, 700px;
+	background-position: center center;
+}
+#cakeplate{
+	border: 1px solid gray;
+	margin: 160px 10px 0px 10px;
+}
