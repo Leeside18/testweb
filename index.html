@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--http://www.htmq.com/js/setinterval.shtml setintervalについての詳しい記述 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="icon" href="C:\Users\katum\Pictures\hash.png" sizes="32x32">
+    	<script type="text/javascript" src="./script/jquery.min.js"></script>
+		<script type="text/javascript" src="./script/sha256.js"></script>
+		<title>Hashコード</title>		
+</head>
+<body><section>
+					<h2>Hashcode</h2>
+					<p>ただいまの時刻
+						<span id="jikoku_now"></span>
+					</p>
+					
+				</section>
+				<form name="form_count">
+				
+				<input name="counter" type="text" size="50" style="font-size:50px;">
+				</br>
+				<input type="text" name="s" size="50" style="font-size:50px;"><br>
+				</br>
+				<p>比較対象</p>
+				<span id="result" style="color: red;font-size: 30px;font-weight: bold;"></span>
+				</br>
+																								<!--[aa]をHash化したものを代入。-->
+				<input type="text" id="target" size="50" style="font-size: 25px;width: 950px;" value="961b6dd3ede3cb8ecbaacbd68de040cd78eb2ed5889130cceb4c49268ea4d506"><br>
+				</br>
+				<input type="button" id="diff" value="比較する" onclick="difftxt()">
+				</form>
+				
+				<div class="h1" style="height: auto !important;">
+			
+			
+			
+			<div class="h2">
+				
+				<div class="p">
+					<form>
+						<input type="hidden" name="algorithm" value="sha256">
+						<table>
+							<tbody><tr>
+								<th>入力</th>
+								<td colspan="2">
+									<input id="input" cols="60" rows="8"></input>
+								</td>
+							</tr>
+							<tr>
+								<th>出力形式</th>
+								<td colspan="2">
+									<label>
+										<input type="radio" name="case" value="lower" checked="checked">
+										小文字
+									</label>
+									<label>
+										<input type="radio" name="case" value="upper">
+										大文字
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<th>ハッシュ生成</th>
+								<td colspan="2">
+									<input type="button" id="execute" value="ハッシュ生成">
+								</td>
+							</tr>
+						</tbody></table>
+					</form>
+				</div>
+			</div>
+			<div class="h2">
+				
+				<div class="p">
+					<table>
+						<tbody><tr>
+							<th colspan="2">ハッシュ</th>
+							<td>
+								<input type="text" id="output" cols="10" rows="100" readonly="readonly" style="width: 500px;">
+							</td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			
+			<input type="button" onclick="analysis()" value="解析を始める" style="width: 200px;height: 50px;font-size: 20px;font-weight: bold;color: white;background: black;">
+		</div>
+				
+				<script type="text/javascript">
+				
+				function analysis(){
+				console.log("----------------------------analysis start----------------------------");
+				count = 0;
+				CpsA = "0";
+				CpsB = "0";
+				viewCps = "0";
+				num = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				CountID = setInterval('countup()',0.03);
+				};
+				
+				function countup(){
+				count++;
+				CpsA = count / 180;
+				CpsB = count / 300;
+				CpsAve = (CpsA+CpsB) / 2;
+				
+				var a = new String('');
+				var b= count;
+				while ( b > 0 ){
+					a = num.charAt(b % 62)+a;
+					b = Math.floor(b / 62) ;
+				}
+				console.log(a);
+				document.getElementById('input').value = a;
+				document.getElementById('execute').click();
+				document.getElementById('diff').click();
+				document.form_count.counter.value = count;
+				document.form_count.s.value=a;
+				};
+				
+				</script>
+				
+				<script>
+				$(function() {
+					GV.uiManager.initialize();
+				});
+
+				var UIManager = function() {
+					this.inputTextArea = null;
+					this.outputTextArea = null;
+					this.executeButton = null;
+					};
+
+				UIManager.prototype.initialize = function() {
+					this.inputTextArea = $('#input');
+					this.outputTextArea = $('#output');
+					this.executeButton = $('#execute');
+
+				var uiManager = this;
+					this.executeButton.click(function() {
+					uiManager.execute();
+					});
+				};
+
+UIManager.prototype.execute = function() {
+	var value = $('input[name="algorithm"]:checked').val();
+	
+	if(value == null) {
+		value = $(':hidden[name="algorithm"]').val();
+	}
+	
+	var hash = "";
+	if (value == "md5") {
+		hash = CryptoJS.MD5(this.inputTextArea.val());
+	} else if(value == "sha1") {
+		hash = CryptoJS.SHA1(this.inputTextArea.val());
+	} else if(value == "sha256") {
+		hash = CryptoJS.SHA256(this.inputTextArea.val());
+	} else if(value == "sha512") {
+		hash = CryptoJS.SHA512(this.inputTextArea.val());
+	} else if(value == "sha3") {
+		hash = CryptoJS.SHA3(this.inputTextArea.val());
+	} else if(value == "sha3_384") {
+		hash = CryptoJS.SHA3(this.inputTextArea.val(), { outputLength: 384 });
+	} else if(value == "sha3_256") {
+		hash = CryptoJS.SHA3(this.inputTextArea.val(), { outputLength: 256 });
+	} else if(value == "sha3_224") {
+		hash = CryptoJS.SHA3(this.inputTextArea.val(), { outputLength: 224 });
+	}
+	
+	var output = hash.toString(CryptoJS.enc.Hex);
+	var alphabetCase = $('input[name="case"]:checked').val();
+	if(alphabetCase == "lower") {
+		output = output.toLowerCase();
+	} else if(alphabetCase == "upper") {
+		output = output.toUpperCase();
+	}
+	this.outputTextArea.val(output);
+};
+
+var GV = {
+	uiManager : new UIManager(),
+};
+
+
+					</script>
+					
+	<script>
+    	function difftxt(){
+        var txt1 = document.getElementById('output').value;
+        var txt2 = document.getElementById('target').value;
+        var res = document.getElementById('result');
+
+			if( txt1 === txt2 ){
+				res.innerHTML = "発見しました";
+				console.log("%%%%%%%%%%%%%Target_Find%%%%%%%%%%%%%");
+				document.title = "発見しました";
+				clearInterval(CountID);
+        	}else{
+        		res.innerHTML = "解析中...";
+        		console.log(txt1)
+        	};
+    	};
+    </script>
+				<script src="script/sale.js"></script>
+    
+</body></html>
